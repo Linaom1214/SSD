@@ -1,0 +1,172 @@
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>SSD</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="./files/style.css" rel="stylesheet">
+  <script type="text/javascript" src="./files/jquery.mlens-1.0.min.js"></script>
+  <script type="text/javascript" src="./files/jquery.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], }, chtml: { scale: 0.8 }};
+  </script>
+  <script src='https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js'></script>
+
+  
+</head>
+
+<body>
+  <div class="content">
+    <h1><strong>SSD: State Space Model and Self-Attention for Infrared Dual-Band Small and Dim Target Detection</strong>
+    </h1>
+    <p id="authors"><span>
+        <a href=""></a></span>
+      <a href="" style="pointer-events: none; text-decoration:none; color: black;">Jian Lin</a>
+      <a href="" style="pointer-events: none; text-decoration:none; color: black;">Saisai Niu</a>
+      <a href="" style="pointer-events: none; text-decoration:none; color: black;">Shaoyi Li</a>
+      <a href="" style="pointer-events: none; text-decoration:none; color: black;">Xi Yang</a>
+      <a href="" style="pointer-events: none; text-decoration:none; color: black;">Xiaokui Yue</a>
+      <br>
+      <br>
+      <span style="font-size: 24px">NWPU
+      </span>
+    </p>
+    <br>
+
+
+    <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+      <div style="text-align: center;">
+        <h2 class="title is-3">Self Attention</h2>
+        <img src="./assets/attention.gif" style="width: 100%; object-fit: cover; aspect-ratio: 1/1; border: none;">
+      </div>
+      <div style="text-align: center;">
+        <h2 class="title is-3">Mamba</h2>
+        <img src="./assets/mamba.gif" style="width: 100%; object-fit: cover; aspect-ratio: 1/1; border: none;">
+      </div>
+    </div>
+
+
+    <!-- <img src="./assets/fig0.jpg" class="teaser-gif" style="width:100%;"><br> -->
+    <!-- <h3 style="text-align:center"><em>Various image synthesis with our proposed IP-Adapter applied on the pretrained text-to-image diffusion model and additional structure controller.</em></h3>
+    <font size="+2">
+          <p style="text-align: center;">
+            <a href="https://arxiv.org/abs/2308.06721" target="_blank">[Paper]</a> &nbsp;&nbsp;&nbsp;&nbsp;
+	      <a href="https://github.com/tencent-ailab/IP-Adapter" target="_blank">[Code]</a> &nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="files/bibtex.txt" target="_blank">[BibTeX]</a>
+          </p>
+    </font> -->
+
+  </div>
+  <div class="content">
+    <h2 style="text-align:center;">Abstract</h2>
+    <p>Traditional methods for detecting small and dim targets in infrared images typically rely on single-band infrared
+      imagery, which often struggles with issues such as limited spatial resolution, faint target signatures, and
+      significant background noise. In contrast, dual-band infrared detection can better mitigate complex background
+      interference and provide more detailed target information. This study presents an end-to-end dual-band infrared
+      detection framework called the State Space Model and Self-Attention for Infrared Dual-Band Small and Dim Target
+      Detection (SSD). To improve the extraction of features for small targets and enhance the global perception of
+      image features, the framework incorporates the Mamba Form, which leverages state space concepts, and the Path
+      Transformer module, which is based on interval sampling. For the effective fusion of dual-band features, a Fourier
+      transform-based dual-feature fusion module is employed, operating in the frequency domain. Experimental results
+      indicate that SSD outperforms the current leading methods, achieving a 6.4% increase in the F-score and a 16.1%
+      rise in the Kappa metric. These results demonstrate the proposed framework's effectiveness in addressing the
+      challenges of dual-band infrared detection for small and dim targets.</p>
+  </div>
+
+  <div class="content">
+    <h2>Methodology</h2>
+ 
+    <p>This figure reveals that the SSD framework begins with a general convolutional neural network used as the backbone model to separately extract deep encoded features from long-wave ${{I}_{l}}$ and mid-wave ${{I}_{m}}$ infrared images. The backbone network captures features at various scales, specifically features from the mid-wave $f_{m}^{i}, i \in \{1,2,3,4\}$ and long-wave $f_{l}^{i}, i \in \{1,2,3,4\}$ images. These multi-scale features, which include essential elements such as appearance, boundaries, textures, and complex semantic information, are then input into different levels of the FFU modules, establishing the feature propagation path.</p>
+
+    <p>The FFU modules operate at multiple levels and are responsible for the top-down fusion of shallow features. They integrate features from different bands and scales, which are then processed through the Dynamic Attention Module (DAM) for target feature selection. The FFU modules ensure that the critical aspects of the image are captured effectively. Through the use of multiple cascaded FFU modules, the SSD framework progressively refines the target features from coarse to fine granularity.</p>
+    
+    <p>FFU4 is dedicated exclusively to integrating cross-modal information and processes two feature maps of identical scale, $f_{m}^{4}$ and $f_{l}^{4}$. In contrast, the other FFU modules also integrate adjacent higher-order feature maps.</p>
+    
+    <p>Before the feature maps are integrated through the Attention Fusion module (cross-modal attention block), $f_{m}$ and $f_{l}$ undergo reconstruction and enhancement using intra-modal self-attention mechanisms. In the subsequent cross-scale self-attention block, if there are features $f_{l-m}^{i+1}$ from the previous FFU, the input $\hat{f}_{l-m}^{i}$ is derived by summing the upsampled $f_{l-m}^{i+1}$ with the output from the cross-modal attention block $\tilde{f}_{l-m}^{i}$. If no previous features exist, the input directly corresponds to $\tilde{f}_{l-m}^{i}$.</p>
+    
+    <p>Finally, a prediction network is employed to produce a binary image $\mathcal{P}$, which exclusively contains the target. This network utilizes bilinear interpolation, convolutional mapping layers, and a Sigmoid activation layer to refine and generate the final binary mask that highlights the detected targets.</p>
+    
+
+
+    <br>
+    <img class="summary-img" src="./assets/xx.png" style="width:100%;"> <br>
+  </div>
+
+  <!-- <div class="content">
+    <h2>Comparison with Existing Methods</h2>
+    <p>The comparison of our proposed IP-Adapter with other methods conditioned on different kinds and styles of images.
+    </p>
+    <img class="summary-img" src="./assets/result1.jpg" style="width:100%;">
+  </div> -->
+
+
+  <!-- <div class="content">
+  <h2>More Results</h2>
+
+
+  <p style="font-size: 18px">
+    <strong>Generalizable to Custom Models</strong>
+    <br><br>
+    Once the IP-Adapter is trained, it can be directly reusable on custom models fine-tuned from the same base model.
+  </p>
+  <img class="summary-img" src="./assets/result2.jpg" style="width:100%;"><br><br>
+
+  <p style="font-size: 18px">
+    <strong>Structure Control</strong>
+    <br><br>
+    The IP-Adapter is fully compatible with existing controllable tools, e.g., ControlNet and T2I-Adapter.
+  </p>
+  <img class="summary-img" src="./assets/result3.jpg" style="width:100%;"><br><br>
+  <p style="font-size: 18px">
+    Our method not only outperforms other methods in terms of image quality, but also produces images that better align with the reference image.
+  </p>
+  <img class="summary-img" src="./assets/result4.jpg" style="width:100%;"><br><br>
+
+  <p style="font-size: 18px">
+    <strong>Image-to-Image and Inpainting</strong>
+    <br><br>
+     Image-guided image-to-image and inpainting can be also achieved by simply replacing text prompt with image prompt.
+  </p>
+  <img class="summary-img" src="./assets/result5.jpg" style="width:100%;"><br><br>
+
+  <p style="font-size: 18px">
+    <strong>Multimodal Prompt</strong>
+    <br><br>
+    Due to the decoupled cross-attention strategy, image prompt can work together with text prompt to realize multimodal image generation.
+  </p>
+  <img class="summary-img" src="./assets/result6.jpg" style="width:100%;"><br><br>
+  <p style="font-size: 18px">
+    Compared with other existing methods, our method can generate superior results in both image quality and alignment with multimodal prompts.
+  </p>
+  <img class="summary-img" src="./assets/result7.jpg" style="width:100%;"><br><br>
+
+</div> -->
+
+
+  <!-- </div>
+<div class="content">
+  <h2>BibTex</h2>
+  <code> @article{ye2023ip-adapter,<br>
+  &nbsp;&nbsp;title={IP-Adapter: Text Compatible Image Prompt Adapter for Text-to-Image Diffusion Models},<br>
+  &nbsp;&nbsp;author={Ye, Hu and Zhang, Jun and Liu, Sibo and Han, Xiao and Yang, Wei},<br>
+  &nbsp;&nbsp;booktitle={arXiv preprint arxiv:2308.06721},<br>
+  &nbsp;&nbsp;year={2023}<br>
+  } </code> 
+</div> -->
+
+  <br><br>
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <!-- <div class="content"> -->
+        The website template is taken from <a href="https://dreambooth.github.io/">dreambooth</a> project page.
+        <!-- </div> -->
+      </div>
+    </div>
+  </footer>
+  <br><br>
+
+</body>
+
+</html>
